@@ -4,7 +4,7 @@ import personService from './services/persons'
 const Filter = ({ setShowAll, setNewFilter }) => {
 
   const handleFilterChange = (event) => {
-    //ööh tän logiikka on salee perseellään :DD     !!
+    //oon epävarma tän logiikasta, noh :DD
     if (event.target.value === null) {
       setShowAll(true)
     } else {
@@ -15,42 +15,26 @@ const Filter = ({ setShowAll, setNewFilter }) => {
 
   return (
     <div>
-      filter by:
+      filter names:
       <input onChange={handleFilterChange} />
     </div>
   )
 }
 
-// TODO / FIXME
-// napilla poistaminen tapahtuu serverin puolella,
-//MUTTA tieto ei poistu näkymästä ennenkuin refreshataan
 const DeleteButton = ({ id, persons, setPersons }) => {
 
   const handleClick = () => {
     const removablePerson = persons.find(person => person.id === id)
 
     if (window.confirm(`Delete ${removablePerson.name} from Phonebook?`)) {
-      setPersons(persons.filter(p => p.id !== id))
-      personService.remove(id)
+      personService
+        .remove(id)
+        .then(
+          setPersons(
+            persons.filter(p => p.id !== id)
+          )
+        )
     }
-
-    /*
-    console.log(`id = ${id}`)
-    //ööh hetkonen onks toi removedNote tärkeä tossa :DDD ei salee?? removedNote => thenin sisällä siis
-    personService.remove(id)
-    
-    .then(removedPerson => {
-        const p = persons.filter(p => p.id !== id)
-        console.log(`persons without ${id}: ${p.map(p => p.name )}`)
-        //Unhandled Rejection (TypeError): setPersons is not a function
-        //setPersons({p})
-      })
-    .catch(error => {
-      console.log('Error:', error)
-    })*/
-
-    //.then(console.log("p.filt(p=> p.id !== id) --> ", persons.filter(person => persons.id !== id)))
-    //setPersons()//})
   }
 
   return (
@@ -58,8 +42,6 @@ const DeleteButton = ({ id, persons, setPersons }) => {
   )
 }
 
-//a person has an id made by server
-//tässäkin on niin paljon propseja, pitäisköhän refaktoroida ja miten :DDD
 const Persons = ({ showAll, persons, newFilter, setPersons }) => {
 
   const personsToShow = showAll
@@ -73,51 +55,74 @@ const Persons = ({ showAll, persons, newFilter, setPersons }) => {
   return (
     <>
       {personsToShow.map((person) =>
-        <div key={person.name}> 
-          {person.name} {person.number} 
-          <DeleteButton id={person.id} persons={persons} setPersons={setPersons} /> 
+        <div key={person.name}>
+          {person.name} {person.number}
+          <DeleteButton id={person.id} persons={persons} setPersons={setPersons} />
         </div>
       )}
     </>
   )
 }
 
+//tässäkin on niin paljon propseja, pitäisköhän refaktoroida ja miten? Vai vaan siistiö
+//voisko newName, newNumber ja niiden setterit laittaa tänne eikä Appin puolelle? Hmm!
+const PersonForm = ({ persons, setPersons }) => {
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
-const PersonForm = ({ newName, setNewName, newNumber, setNewNumber, persons, setPersons }) => {
+  const updatePerson = (person) => {
+    personService
+      .update(person.id, person)
+      .then(returnedPerson => {
+        console.log('Updated')
+        setPersons(
+          persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson)
+        )
+      })
+  }
+
+  const emptyInputFields = () =>{
+    setNewName('')
+    setNewNumber('')
+  }
+
+  //haluanko että tyhjennetään inputkentät myös jos ei vaihdeta puhnro?
+  const handleNamesake = (namesake) => {
+      if (window.confirm(`${namesake.name} is already added to phonebook, replace the old number?`)) {
+        const changedPerson = { ...namesake, number: newNumber }
+        updatePerson(changedPerson)
+        emptyInputFields()
+      }
+  }
 
   const addPerson = (event) => {
     event.preventDefault()
 
     //jos laitan tän niin se on aina true...? HMMM
-    //ahaa..?? se palauttaa vaan ton,,, nuolen jälkeen olevan tekstin??? ei mitään booleania lmao
+    //ahaa..?? se palauttaa vaan ton nuolen jälkeen olevan tekstin? eikä booleania
     //const nameExists = () => persons.some(x => x.name === newName)
     //console.log('nameExists', nameExists)
 
-    if (persons.some(x => x.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
+    const namesake = persons.find(p => p.name === newName)
+    if (namesake !== undefined) {
+      handleNamesake(namesake)
       return
     }
-
+  
     const personObj = {
       name: newName,
       number: newNumber
     }
 
+    const concatReturned = (returnedPerson) => {
+      setPersons(persons.concat(returnedPerson))
+      emptyInputFields()
+    }
 
-    console.log('persons ennen concat: ', persons)
-
-    //miks täällä saa olla setPersons mutta ei DeleteButtonin puolella?
+    //a person has an id made by server
     personService
       .create(personObj)
-      .then(returnedPerson => {
-        console.log('create promise fulfilled')
-        setPersons(persons.concat(returnedPerson))
-      })
-
-    console.log('persons after(?) concat: ', persons)
-    //setPersons(persons.concat(personObj))
-    setNewName('')
-    setNewNumber('')
+      .then(returnedPerson => concatReturned(returnedPerson))
   }
 
   //jos yritän tehdä näistä onelinerit, niin se kadottaa sen viitteen? eiks se osaa..? hmm?
@@ -154,12 +159,10 @@ const PersonForm = ({ newName, setNewName, newNumber, setNewNumber, persons, set
 
 const App = () => {
   const [persons, setPersons] = useState([])
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [showAll, setShowAll] = useState(true)
 
-  //yritin laittaa tän suoraan useEffectin sisälle React ei tykännyt
+  //yritin laittaa tän suoraan useEffectin sisälle, tarkista miten se tehdään
   const hook = () => {
     personService
       .getAll()
@@ -170,7 +173,7 @@ const App = () => {
   //renderöi vaan ekan kerran
   useEffect(hook, [])
 
-  // äää miks AHAAA FUCK true
+  // äää miks AHAAA true
   // const bool = persons.some(x => x.name === "Arto Hellas")
   // console.log('Bool = ', bool)
 
@@ -183,10 +186,6 @@ const App = () => {
       />
       <h2>Add a new person</h2>
       <PersonForm
-        newName={newName}
-        setNewName={setNewName}
-        newNumber={newNumber}
-        setNewNumber={setNewNumber}
         persons={persons}
         setPersons={setPersons}
       />
@@ -197,7 +196,6 @@ const App = () => {
         newFilter={newFilter}
         setPersons={setPersons}
       />
-      {console.log(persons.map(p => <div key={p.name}>{p}</div>))}
     </div>
   )
 }
