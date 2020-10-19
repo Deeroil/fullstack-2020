@@ -15,7 +15,7 @@ const PersonForm = ({ persons, setPersons, handleMessage, setMessage }) => {
         handleMessage(`Updated ${person.name}'s phone number`)
       }).catch(error => {
         //how do you check what caused the error?
-        handleMessage(`Error: ${person.name} was already deleted from server`)
+        handleMessage(`Error: ${person.name} couldn't be updated`)
       })
   }
 
@@ -64,8 +64,12 @@ const PersonForm = ({ persons, setPersons, handleMessage, setMessage }) => {
         concatReturned(returnedPerson)
         handleMessage(`Added ${returnedPerson.name} to Phonebook`)
       })
-      .catch(error => handleMessage(`Error: Couldn't add ${personObj.name}`))
-  }
+      .catch(error => {
+        console.log(error.response.data)
+        handleMessage(`Error: ${error.response.data.error}`)
+      })
+
+    }
 
   //jos yritän tehdä näistä onelinerit, niin se kadottaa sen viitteen? eiks se osaa..? hmm?
   const handleNameChange = (event) => {
