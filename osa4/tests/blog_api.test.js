@@ -41,7 +41,7 @@ test('POST req creates new blog', async ()  => {
         url: 'www.testytest.com',
         likes: '3'
     }
-    const blogObj = await api.post('/api/blogs').send(newBlog)        
+    await api.post('/api/blogs').send(newBlog)        
     
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
