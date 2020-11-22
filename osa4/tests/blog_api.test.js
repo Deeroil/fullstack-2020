@@ -48,6 +48,24 @@ test('blogs have id', async () => {
     })
 })
 
+test('POST req creates new blog', async ()  => {
+    const newBlog = {
+        title: 'test blog',
+        author: 'test author',
+        url: 'www.testytest.com',
+        likes: '3'
+    }
+    const blogObj = await api.post('/api/blogs').send(newBlog)        
+    
+    const response = await api.get('/api/blogs')
+    expect(response.body.length).toBe(initialBlogs.length + 1)
+    
+    const titles = response.body.map(blog => blog.title)
+    expect(titles).toContain(
+        'test blog'
+    ) 
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
