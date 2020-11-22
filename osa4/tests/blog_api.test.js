@@ -1,31 +1,17 @@
-const mongoose = require('mongoose')
 const supertest = require('supertest')
+const mongoose = require('mongoose')
+const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
-const blog = require('../models/blog')
-
-const initialBlogs = [
-    {
-        title: 'Elämää fantasiaviidakossa',
-        author: 'Reetu Kirjoittaja',
-        url: 'vvv.fantasiawiiwakko.netti',
-        likes: '1496'
-    },
-    {
-        title: 'Kalasoppaa possuille',
-        author: 'Aili Kananluoma',
-        url: 'vvv.kalalampi.netti',
-        likes: '506'
-
-    }
-]
 
 beforeEach(async () => {
     await Blog.deleteMany({})
-    let blogObject = new Blog(initialBlogs[0])
+
+    let blogObject = new Blog(helper.initialBlogs[0])
     await blogObject.save()
-    blogObject = new Blog(initialBlogs[1])
+
+    blogObject = new Blog(helper.initialBlogs[1])
     await blogObject.save()
 })
 
@@ -38,7 +24,7 @@ test('blogs are returned as json', async () => {
 
 test('api returns right amount of blogs', async () => {
     const response = await api.get('/api/blogs')
-    expect(response.body.length).toBe(initialBlogs.length)
+    expect(response.body.length).toBe(helper.initialBlogs.length)
 })
 
 test('blogs have id', async () => {
@@ -57,10 +43,10 @@ test('POST req creates new blog', async ()  => {
     }
     const blogObj = await api.post('/api/blogs').send(newBlog)        
     
-    const response = await api.get('/api/blogs')
-    expect(response.body.length).toBe(initialBlogs.length + 1)
-    
-    const titles = response.body.map(blog => blog.title)
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+
+    const titles = blogsAtEnd.map(n => n.title)
     expect(titles).toContain(
         'test blog'
     ) 
