@@ -15,73 +15,80 @@ beforeEach(async () => {
     await blogObject.save()
 })
 
-test('blogs are returned as json', async () => {
-    await api
-        .get('/api/blogs')
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
-})
+describe('when there are initially some notes saved', () => {
+    test('blogs are returned as json', async () => {
+        await api
+            .get('/api/blogs')
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+    })
 
-test('api returns right amount of blogs', async () => {
-    const response = await api.get('/api/blogs')
-    expect(response.body.length).toBe(helper.initialBlogs.length)
-})
+    test('api returns right amount of blogs', async () => {
+        const response = await api.get('/api/blogs')
+        expect(response.body.length).toBe(helper.initialBlogs.length)
+    })
 
-test('blogs have id', async () => {
-    const response = await api.get('/api/blogs')
-    response.body.forEach(blog => {
-        expect(blog.id).toBeDefined()
+    test('blogs have id', async () => {
+        const response = await api.get('/api/blogs')
+        response.body.forEach(blog => {
+            expect(blog.id).toBeDefined()
+        })
     })
 })
 
-test('POST req creates new blog', async ()  => {
-    const newBlog = {
-        title: 'test blog',
-        author: 'test author',
-        url: 'www.testytest.com',
-        likes: 3
-    }
-    await api.post('/api/blogs').send(newBlog)        
-    
-    const blogsAtEnd = await helper.blogsInDb()
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+describe('addition of a new blog', () => {
+    test('POST req with valid data creates new blog', async ()  => {
+        const newBlog = {
+            title: 'test blog',
+            author: 'test author',
+            url: 'www.testytest.com',
+            likes: 3
+        }
+        await api.post('/api/blogs').send(newBlog)        
+        
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
 
-    const titles = blogsAtEnd.map(n => n.title)
-    expect(titles).toContain(
-        'test blog'
-    ) 
-})
-
-test('title and url missing returns 400 Bad Request', async () => {
-    const newBlog = {
-        author: 'author',
-        likes: 100
-    }
-    
-    const result = await api.post('/api/blogs').send(newBlog)
-    expect(result.status).toBe(400)
-})
-
-test('likes have default value of 0', async () => {
-    const newBlog = new Blog({
-        title: 'test blog',
-        author: 'test author',
-        url: 'www.testytest.com'
-    })
-    expect(newBlog.likes).toBe(0)
-})
-
-test('delete blog using id', async () => {
-    const newBlog = new Blog({
-        title: 'test blog',
-        author: 'test author',
-        url: 'www.testytest.com',
-        likes: 100
+        const titles = blogsAtEnd.map(n => n.title)
+        expect(titles).toContain(
+            'test blog'
+        ) 
     })
 
-    const response = await api.delete('/api/blogs/' + newBlog.id)
-    expect(response.status).toBe(204)
+    test('title and url missing returns 400 Bad Request', async () => {
+        const newBlog = {
+            author: 'author',
+            likes: 100
+        }
+        
+        const result = await api.post('/api/blogs').send(newBlog)
+        expect(result.status).toBe(400)
+    })
+
+    test('likes have default value of 0', async () => {
+        const newBlog = new Blog({
+            title: 'test blog',
+            author: 'test author',
+            url: 'www.testytest.com'
+        })
+        expect(newBlog.likes).toBe(0)
+    })
 })
+
+describe('deletion of a blog', () => {
+    test('status code 204 after deleting using a valid id', async () => {
+        const newBlog = new Blog({
+            title: 'test blog',
+            author: 'test author',
+            url: 'www.testytest.com',
+            likes: 100
+        })
+
+        const response = await api.delete('/api/blogs/' + newBlog.id)
+        expect(response.status).toBe(204)
+    })
+})
+
 
 afterAll(() => {
     mongoose.connection.close()
