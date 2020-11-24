@@ -71,6 +71,18 @@ test('likes have default value of 0', async () => {
     expect(newBlog.likes).toBe(0)
 })
 
+test('delete blog using id', async () => {
+    const newBlog = new Blog({
+        title: 'test blog',
+        author: 'test author',
+        url: 'www.testytest.com',
+        likes: 100
+    })
+
+    const response = await api.delete('/api/blogs/' + newBlog.id)
+    expect(response.status).toBe(204)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
