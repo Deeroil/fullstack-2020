@@ -39,7 +39,7 @@ test('POST req creates new blog', async ()  => {
         title: 'test blog',
         author: 'test author',
         url: 'www.testytest.com',
-        likes: '3'
+        likes: 3
     }
     await api.post('/api/blogs').send(newBlog)        
     
@@ -55,7 +55,7 @@ test('POST req creates new blog', async ()  => {
 test('title and url missing returns 400 Bad Request', async () => {
     const newBlog = {
         author: 'author',
-        likes: '100'
+        likes: 100
     }
     
     const result = await api.post('/api/blogs').send(newBlog)

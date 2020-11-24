@@ -5,13 +5,13 @@ const initialBlogs = [
         title: 'Elämää fantasiaviidakossa',
         author: 'Reetu Kirjoittaja',
         url: 'vvv.fantasiawiiwakko.netti',
-        likes: '1496'
+        likes: 1496
     },
     {
         title: 'Daily lives of orangutans',
         author: 'Aili Kananluoma',
         url: 'vvv.orangos.netti',
-        likes: '506'
+        likes: 506
 
     }
 ]
