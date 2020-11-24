@@ -52,6 +52,25 @@ test('POST req creates new blog', async ()  => {
     ) 
 })
 
+test('title and url missing returns 400 Bad Request', async () => {
+    const newBlog = {
+        author: 'author',
+        likes: '100'
+    }
+    
+    const result = await api.post('/api/blogs').send(newBlog)
+    expect(result.status).toBe(400)
+})
+
+test('likes have default value of 0', async () => {
+    const newBlog = new Blog({
+        title: 'test blog',
+        author: 'test author',
+        url: 'www.testytest.com'
+    })
+    expect(newBlog.likes).toBe(0)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
