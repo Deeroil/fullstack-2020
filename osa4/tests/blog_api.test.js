@@ -41,6 +41,12 @@ describe('when there are initially some blogs saved', () => {
             expect(blog.id).toBeDefined()
         })
     })
+    test('blogs have user', async () => {
+        const response = await api.get('/api/blogs')
+        response.body.forEach(blog => {
+            expect(blog.user).toBeDefined()
+        })
+    })
 })
 
 describe('addition of a new blog', () => {
