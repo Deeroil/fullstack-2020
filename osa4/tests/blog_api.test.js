@@ -87,6 +87,17 @@ describe('addition of a new blog', () => {
         expect(result.status).toBe(400)
     })
 
+    test('token missing returns 401 unauthorized', async () => {
+        const newBlog = {
+            title: 'test blog',
+            author: 'test author',
+            url: 'www.testytest.com',
+            likes: 3
+        }
+        const result = await api.post('/api/blogs').send(newBlog)
+        expect(result.status).toBe(401)
+    })
+
     test('likes have default value of 0', async () => {
         const newBlog = new Blog({
             title: 'test blog',
