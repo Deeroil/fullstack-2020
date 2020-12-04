@@ -4,18 +4,25 @@ const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 beforeEach(async () => {
+    await User.deleteMany({})
     await Blog.deleteMany({})
 
-    let blogObject = new Blog(helper.initialBlogs[0])
-    await blogObject.save()
+    await helper.createUser()
 
-    blogObject = new Blog(helper.initialBlogs[1])
-    await blogObject.save()
+    const userId = await helper.getUserId()
+
+    for (let blog of helper.initialBlogs) {
+        blog.user = userId
+
+        let blogObj = new Blog(blog)
+        await blogObj.save()
+    }
 })
 
-describe('when there are initially some notes saved', () => {
+describe('when there are initially some blogs saved', () => {
     test('blogs are returned as json', async () => {
         await api
             .get('/api/blogs')
@@ -37,31 +44,40 @@ describe('when there are initially some notes saved', () => {
 })
 
 describe('addition of a new blog', () => {
-    test('POST req with valid data creates new blog', async ()  => {
+    test('POST req with valid data creates new blog', async () => {
+        const userId = await helper.getUserId()
+        const token = await helper.createToken()
+
         const newBlog = {
             title: 'test blog',
             author: 'test author',
             url: 'www.testytest.com',
-            likes: 3
+            likes: 3,
+            user: userId
         }
-        await api.post('/api/blogs').send(newBlog)        
-        
+
+        await api.post('/api/blogs').set({ 'Authorization': 'bearer ' + token }).send(newBlog)
+
         const blogsAtEnd = await helper.blogsInDb()
         expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
 
-        const titles = blogsAtEnd.map(n => n.title)
+        const titles = blogsAtEnd.map(b => b.title)
         expect(titles).toContain(
             'test blog'
-        ) 
+        )
     })
 
     test('title and url missing returns 400 Bad Request', async () => {
+        const userId = await helper.getUserId()
+        const token = await helper.createToken()
+
         const newBlog = {
             author: 'author',
-            likes: 100
+            likes: 100,
+            user: userId
         }
-        
-        const result = await api.post('/api/blogs').send(newBlog)
+
+        const result = await api.post('/api/blogs').set({ 'Authorization': 'bearer ' + token }).send(newBlog)
         expect(result.status).toBe(400)
     })
 
@@ -76,19 +92,18 @@ describe('addition of a new blog', () => {
 })
 
 describe('deletion of a blog', () => {
-    test('status code 204 after deleting using a valid id', async () => {
-        const newBlog = new Blog({
-            title: 'test blog',
-            author: 'test author',
-            url: 'www.testytest.com',
-            likes: 100
-        })
+    test('status code 204 after successful deletion using a valid id', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToRemove = blogsAtStart[0]
+        const token = await helper.createToken()
 
-        const response = await api.delete('/api/blogs/' + newBlog.id)
+        const response = await api.delete('/api/blogs/' + blogToRemove.id).set({ 'Authorization': 'bearer ' + token })
         expect(response.status).toBe(204)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
     })
 })
-
 
 afterAll(() => {
     mongoose.connection.close()
