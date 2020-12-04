@@ -5,13 +5,13 @@ const User = require('../models/user')
 usersRouter.get('/', async (request, response) => {
     //don't show user's id in the blog
     const users = await User.find({})
-        .populate('blogs', {title: 1, author: 1, url: 1, likes: 1})
+        .populate('blogs', { title: 1, author: 1, url: 1, likes: 1 })
     response.json(users)
 })
 
 usersRouter.get('/:id', async (request, response) => {
     const user = await User.findById(request.params.id)
-        .populate('blogs', {title: 1, author: 1, url: 1, likes: 1})
+        .populate('blogs', { title: 1, author: 1, url: 1, likes: 1 })
 
     if (user) {
         response.json(user)
@@ -53,7 +53,7 @@ usersRouter.put('/:id', async (request, response) => {
         user[key] = body[key]
     }
 
-    const updatedUser = User.findByIdAndUpdate(request.params.id, user, {new: true})
+    const updatedUser = User.findByIdAndUpdate(request.params.id, user, { new: true })
     response.json(updatedUser)
 })
 
