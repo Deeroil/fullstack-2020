@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt')
 const supertest = require('supertest')
 const mongoose = require('mongoose')
 const app = require('../app')
@@ -9,11 +8,7 @@ const helper = require('./test_helper')
 describe('with initially one user in db', () => {
     beforeEach(async () => {
         await User.deleteMany({})
-
-        const passwordHash = await bcrypt.hash('password123', 10)
-        const user = new User({ username: 'root', user: 'Sir Bulbo', passwordHash })
-
-        await user.save()
+        await helper.createUser()
     })
 
     test('api returns only the initial user', async () => {
