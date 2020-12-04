@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
@@ -13,9 +15,27 @@ const initialBlogs = [
         author: 'Aili Kananluoma',
         url: 'vvv.orangos.netti',
         likes: 506
-
     }
 ]
+
+const createUser = async () => {
+    const passwordHash = await bcrypt.hash('password123', 10)
+    const user = new User({ username: 'root', user: 'user', passwordHash })
+    await user.save()
+}
+
+const getUserId = async () => {
+    const user = await User.findOne({ username: 'root' })
+    return user.id
+}
+
+const createToken = async () => {
+    const userForToken = {
+        username: 'root',
+        id: await getUserId()
+    }
+    return jwt.sign(userForToken, process.env.SECRET)
+}
 
 const blogsInDb = async () => {
     const blogs = await Blog.find({})
@@ -29,6 +49,9 @@ const usersInDb = async () => {
 
 module.exports = {
     initialBlogs,
+    createUser,
+    getUserId,
+    createToken,
     blogsInDb,
     usersInDb
 }
