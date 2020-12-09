@@ -47,6 +47,11 @@ const App = () => {
     }
   }
 
+  const handleLogout = () => {
+    window.localStorage.removeItem('loggedBloglistUser')
+    setUser(null)
+  }
+
   if (user === null) {
     return (
       <LoginForm 
@@ -62,6 +67,7 @@ const App = () => {
   return (
     <div>
       <div>Logged in as {user.user}</div>
+      <button onClick={handleLogout}>log out</button>
       <h2>blogs</h2>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
