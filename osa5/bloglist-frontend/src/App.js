@@ -18,6 +18,14 @@ const App = () => {
     get()
   }, [])
 
+  useEffect(() => {
+    const loggedInUserJSON = window.localStorage.getItem('loggedBloglistUser')
+    if (loggedInUserJSON) {
+      const user = JSON.parse(loggedInUserJSON)
+      setUser(user)
+    }
+  }, [])
+
   const handleUsernameChange = (value) => {
     setUsername(value)
   }
@@ -33,6 +41,7 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      window.localStorage.setItem('loggedBloglistUser', JSON.stringify(user))
     } catch (error) {    
       console.log('Error: ', error)
     }
