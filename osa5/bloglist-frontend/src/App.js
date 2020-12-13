@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
@@ -10,6 +11,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     const get = async () => {
@@ -28,6 +30,13 @@ const App = () => {
     }
   }, [])
 
+  const handleMessage = (message) => {
+    setMessage(message)
+    setTimeout(() => {
+      setMessage('')
+    }, 3000)
+  }
+
   const handleUsernameChange = (value) => {
     setUsername(value)
   }
@@ -40,7 +49,13 @@ const App = () => {
     try {
       const returnedBlog = await blogService.create(blog)
       setBlogs(blogs.concat(returnedBlog))
+      handleMessage(
+        `Added ${blog.title || '[title missing]'} by ${blog.author || '[no author]'} successfully`
+      )
     } catch (error) {
+      handleMessage(
+        `Adding blog ${blog.title || '[no title]'} by ${blog.author || '[no author]'} failed`
+      )
       console.log('Error: ', error)
     }
   }
@@ -55,8 +70,10 @@ const App = () => {
       setUsername('')
       setPassword('')
       window.localStorage.setItem('loggedBloglistUser', JSON.stringify(user))
+      handleMessage('Logged in')
     } catch (error) {    
       console.log('Error: ', error)
+      handleMessage('Login failed: Wrong username or password')
     }
   }
 
@@ -64,17 +81,21 @@ const App = () => {
     window.localStorage.removeItem('loggedBloglistUser')
     setUser(null)
     blogService.setToken(null)
+    handleMessage('Logged out')
   }
 
   if (user === null) {
     return (
-      <LoginForm 
-        handleLogin={handleLogin}
-        handleUsernameChange={handleUsernameChange}
-        handlePasswordChange={handlePasswordChange}
-        username={username}
-        password={password}
-      />
+      <div>
+        <Notification message={message} />
+        <LoginForm 
+          handleLogin={handleLogin}
+          handleUsernameChange={handleUsernameChange}
+          handlePasswordChange={handlePasswordChange}
+          username={username}
+          password={password}
+        />
+      </div>
     )
   }
 
@@ -82,6 +103,7 @@ const App = () => {
     <div>
       <div>Logged in as {user.user}</div>
       <button onClick={handleLogout}>log out</button>
+      <Notification message={message} />
       <BlogForm createBlog={addBlog} />
       <h2>blogs</h2>
       {blogs.map(blog =>
