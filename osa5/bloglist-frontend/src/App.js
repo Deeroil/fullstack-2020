@@ -84,10 +84,9 @@ const App = () => {
     handleMessage('Logged out')
   }
 
-  if (user === null) {
+  const loginForm = () => {
     return (
       <div>
-        <Notification message={message} />
         <LoginForm 
           handleLogin={handleLogin}
           handleUsernameChange={handleUsernameChange}
@@ -95,21 +94,30 @@ const App = () => {
           username={username}
           password={password}
         />
+    </div>
+    )
+  }
+
+  const loggedInView = () => {
+    return (
+      <div>
+        <div>Logged in as {user.user}</div>
+        <button onClick={handleLogout}>log out</button>
+        <BlogForm createBlog={addBlog} />
+        <h2>Blogs</h2>
+        {blogs.map(blog =>
+          <Blog key={blog.id} blog={blog} />
+        )}
       </div>
     )
   }
 
   return (
     <div>
-      <div>Logged in as {user.user}</div>
-      <button onClick={handleLogout}>log out</button>
+      <h2>Bloglist App</h2>
       <Notification message={message} />
-      <BlogForm createBlog={addBlog} />
-      <h2>blogs</h2>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-    </div>
+      {(user === null) ? loginForm() : loggedInView()}
+    </div> 
   )
 }
 
