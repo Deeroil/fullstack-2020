@@ -7,31 +7,31 @@ const LoginForm = ({
   password
 }) => {
   return (
-      <div>
-        <h2>Log in to Bloglist</h2>
-        <form onSubmit={handleLogin}>
-          <div>
-            username
+    <div>
+      <h2>Log in to Bloglist</h2>
+      <form onSubmit={handleLogin}>
+        <div>
+          username
               <input
-              type="text"
-              value={username}
-              name="Username"
-              onChange={({ target }) => handleUsernameChange(target.value)}
-              />
-            </div>
-            <div>
-            password
+            type="text"
+            value={username}
+            name="Username"
+            onChange={({ target }) => handleUsernameChange(target.value)}
+          />
+        </div>
+        <div>
+          password
               <input
-              type="password"
-              value={password}
-              name="Password"
-              onChange={({ target }) => handlePasswordChange(target.value)}
-              />
-          </div>
+            type="password"
+            value={password}
+            name="Password"
+            onChange={({ target }) => handlePasswordChange(target.value)}
+          />
+        </div>
         <button type="submit">login</button>
-        </form>
-      </div>
-    )
+      </form>
+    </div>
+  )
 }
 
 export default LoginForm

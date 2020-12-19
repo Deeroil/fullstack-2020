@@ -19,7 +19,7 @@ const App = () => {
   useEffect(() => {
     const get = async () => {
       const blogs = await blogService.getAll()
-      setBlogs( blogs )
+      setBlogs(blogs)
     }
     get()
   }, [])
@@ -66,7 +66,7 @@ const App = () => {
   }
 
   const handleLogin = async (event) => {
-    event.preventDefault()    
+    event.preventDefault()
     try {
       const user = await loginService.login({ username, password })
 
@@ -76,7 +76,7 @@ const App = () => {
       setPassword('')
       window.localStorage.setItem('loggedBloglistUser', JSON.stringify(user))
       handleMessage('Logged in')
-    } catch (error) {    
+    } catch (error) {
       console.log('Error: ', error)
       handleMessage('Login failed: Wrong username or password')
     }
@@ -92,14 +92,14 @@ const App = () => {
   const loginForm = () => {
     return (
       <div>
-        <LoginForm 
+        <LoginForm
           handleLogin={handleLogin}
           handleUsernameChange={handleUsernameChange}
           handlePasswordChange={handlePasswordChange}
           username={username}
           password={password}
         />
-    </div>
+      </div>
     )
   }
 
@@ -126,7 +126,7 @@ const App = () => {
       <h2>Bloglist App</h2>
       <Notification message={message} />
       {(user === null) ? loginForm() : loggedInView()}
-    </div> 
+    </div>
   )
 }
 
