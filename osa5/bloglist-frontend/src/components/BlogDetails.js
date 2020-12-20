@@ -4,9 +4,11 @@ const BlogDetails = ({ blog, handleUpdate }) => {
   const user = blog.user
 
   const detailStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
+    paddingTop: 5,
+    paddingLeft: 5,
+    paddingBottom: 5,
     border: 'solid',
+    borderRadius: 5,
     borderWidth: 1,
     marginBottom: 5
   }
