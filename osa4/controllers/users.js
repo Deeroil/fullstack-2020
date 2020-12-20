@@ -49,15 +49,8 @@ usersRouter.delete('/:id', async (request, response) => {
 })
 
 usersRouter.put('/:id', async (request, response) => {
-    const user = await User.findById(request.params.id)
-    const body = request.body
-
-    for (const key in body) {
-        user[key] = body[key]
-    }
-
     const updatedUser = await User
-        .findByIdAndUpdate(request.params.id, user, { new: true })
+        .findByIdAndUpdate(request.params.id, request.body, { new: true })
         .populate('blogs', { title: 1, author: 1, url: 1, likes: 1 })
     response.json(updatedUser)
 })
