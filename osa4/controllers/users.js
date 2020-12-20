@@ -37,6 +37,9 @@ usersRouter.post('/', async (request, response) => {
     })
 
     const savedUser = await user.save()
+    await savedUser
+        .populate('blogs', { title: 1, author: 1, url: 1, likes: 1 })
+        .execPopulate()
     response.status(201).json(savedUser)
 })
 
@@ -53,7 +56,9 @@ usersRouter.put('/:id', async (request, response) => {
         user[key] = body[key]
     }
 
-    const updatedUser = User.findByIdAndUpdate(request.params.id, user, { new: true })
+    const updatedUser = await User
+        .findByIdAndUpdate(request.params.id, user, { new: true })
+        .populate('blogs', { title: 1, author: 1, url: 1, likes: 1 })
     response.json(updatedUser)
 })
 
