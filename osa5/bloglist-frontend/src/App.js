@@ -65,6 +65,16 @@ const App = () => {
     }
   }
 
+  const updateBlog = async (updatedBlog) => {
+    try {
+      const returnedBlog = await blogService.update(updatedBlog.id, updatedBlog)
+      setBlogs(blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog))
+    } catch (error) {
+      handleMessage(`Updating likes failed`)
+      console.log('Error: ', error)
+    }   
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -114,7 +124,7 @@ const App = () => {
         <h2>Blogs</h2>
         {blogs.map(blog =>
           <div key={blog.id}>
-            <Blog blog={blog} />
+            <Blog blog={blog} handleUpdate={updateBlog} />
           </div>
         )}
       </div>

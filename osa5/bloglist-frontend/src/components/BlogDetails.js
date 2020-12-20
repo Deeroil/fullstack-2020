@@ -1,6 +1,6 @@
 import React from 'react'
 
-const BlogDetails = ({ blog }) => {
+const BlogDetails = ({ blog, handleUpdate }) => {
   const user = blog.user
 
   const detailStyle = {
@@ -11,8 +11,10 @@ const BlogDetails = ({ blog }) => {
     marginBottom: 5
   }
 
-  const handleLike = () => {
-    console.log('Not implemented yet!')
+  const addLike = (event) => {
+    event.preventDefault()
+    const updatedBlog = { ...blog, 'likes': blog.likes + 1 } 
+    handleUpdate(updatedBlog)
   }
 
   return (
@@ -20,7 +22,7 @@ const BlogDetails = ({ blog }) => {
       <div>{blog.url}</div>
       <div>
         {'likes:' + blog.likes}
-        <button onClick={handleLike}>like</button>
+        <button onClick={(e) => addLike(e)}>like</button>
       </div>
       <div>{user.user}</div>
     </div>
