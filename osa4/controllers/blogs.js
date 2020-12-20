@@ -43,10 +43,13 @@ blogsRouter.post('/', async (request, response) => {
         return response.status(400).json({ error: 'blog title and url missing' })
     }
     const savedBlog = await blog.save()
-
+    await savedBlog
+        .populate('user', { username: 1, user: 1 })
+        .execPopulate()
+    
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
-
+    
     response.status(201).json(savedBlog)
 })
 
@@ -72,7 +75,9 @@ blogsRouter.put('/:id', async (request, response) => {
         blog[key] = body[key]
     }
 
-    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+    const updatedBlog = await Blog
+        .findByIdAndUpdate(request.params.id, blog, { new: true })
+        .populate('user', { username: 1, user: 1 })
     response.json(updatedBlog)
 })
 
