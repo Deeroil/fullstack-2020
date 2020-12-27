@@ -62,7 +62,10 @@ describe('addition of a new blog', () => {
             user: userId
         }
 
-        await api.post('/api/blogs').set({ 'Authorization': 'bearer ' + token }).send(newBlog)
+        await api
+            .post('/api/blogs')
+            .set({ 'Authorization': 'bearer ' + token })
+            .send(newBlog)
 
         const blogsAtEnd = await helper.blogsInDb()
         expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
@@ -83,8 +86,11 @@ describe('addition of a new blog', () => {
             user: userId
         }
 
-        const result = await api.post('/api/blogs').set({ 'Authorization': 'bearer ' + token }).send(newBlog)
-        expect(result.status).toBe(400)
+        await api
+            .post('/api/blogs')
+            .set({ 'Authorization': 'bearer ' + token })
+            .send(newBlog)
+            .expect(400)
     })
 
     test('token missing returns 401 unauthorized', async () => {
@@ -94,8 +100,10 @@ describe('addition of a new blog', () => {
             url: 'www.testytest.com',
             likes: 3
         }
-        const result = await api.post('/api/blogs').send(newBlog)
-        expect(result.status).toBe(401)
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(401)
     })
 
     test('likes have default value of 0', async () => {
@@ -114,8 +122,10 @@ describe('deletion of a blog', () => {
         const blogToRemove = blogsAtStart[0]
         const token = await helper.createToken()
 
-        const response = await api.delete('/api/blogs/' + blogToRemove.id).set({ 'Authorization': 'bearer ' + token })
-        expect(response.status).toBe(204)
+        await api
+            .delete('/api/blogs/' + blogToRemove.id)
+            .set({ 'Authorization': 'bearer ' + token })
+            .expect(204)
 
         const blogsAtEnd = await helper.blogsInDb()
         expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)

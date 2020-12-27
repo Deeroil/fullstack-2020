@@ -27,33 +27,40 @@ describe('with initially one user in db', () => {
             password: 'pw123'
         }
 
-        const result = await api.post('/api/users')
+        const result = await api
+            .post('/api/users')
             .send(newUser)
             .expect(400)
             .expect('Content-Type', /application\/json/)
 
         expect(result.body.error).toContain('`username` to be unique')
-        const usersAtEnd = await helper.usersInDb()
 
+        const usersAtEnd = await helper.usersInDb()
         expect(usersAtStart).toHaveLength(usersAtEnd.length)
     })
 })
 
 describe('creating a new valid user', () => {
     test('with valid username and password returns 201 created', async () => {
-        const response = await api.post('/api/users/').send({ username: 'Mattikainen', password: 'blabla100' })
-        expect(response.status).toBe(201)
+        await api
+            .post('/api/users/')
+            .send({ username: 'Mattikainen', password: 'blabla100' })
+            .expect(201)
     })
 })
 
 describe('creating an user with invalid properties', () => {
     test('empty body returns 400 bad request', async () => {
-        const response = await api.post('/api/users/').send({})
-        expect(response.status).toBe(400)
+        await api
+            .post('/api/users/')
+            .send({})
+            .expect(400)
     })
 
     test('throws validation error if username is too short', async () => {
-        const response = await api.post('/api/users/').send({ username: 'Ma', password: 'blabla100' })
+        const response = await api
+            .post('/api/users/')
+            .send({ username: 'Ma', password: 'blabla100' })
         expect(response.body.error).toContain('`username` (`Ma`) is shorter')
     })
 })
