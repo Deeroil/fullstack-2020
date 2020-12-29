@@ -19,7 +19,7 @@ const App = () => {
   useEffect(() => {
     const get = async () => {
       const blogs = await blogService.getAll()
-      setBlogs(blogs)
+      setBlogs(sortBlogs(blogs))
     }
     get()
   }, [])
@@ -48,6 +48,11 @@ const App = () => {
     setPassword(value)
   }
 
+  const sortBlogs = (blogs) => {
+    blogs.sort((a, b) => b.likes - a.likes)
+    return blogs
+  }
+
   const addBlog = async (blog) => {
     blogFormRef.current.toggleVisibility()
     console.log('createBlog: ', blog)
@@ -68,7 +73,9 @@ const App = () => {
   const updateBlog = async (updatedBlog) => {
     try {
       const returnedBlog = await blogService.update(updatedBlog.id, updatedBlog)
-      setBlogs(blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog))
+      const updatedBlogs = blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog)
+      setBlogs(sortBlogs(updatedBlogs))
+
     } catch (error) {
       handleMessage(`Updating likes failed`)
       console.log('Error: ', error)
