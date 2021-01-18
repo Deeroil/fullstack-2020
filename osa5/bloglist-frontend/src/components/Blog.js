@@ -1,8 +1,9 @@
 import React from 'react'
 import Togglable from './Togglable'
 import BlogDetails from './BlogDetails'
+import DeleteButton from './DeleteButton'
 
-const Blog = ({ blog, handleUpdate }) => {
+const Blog = ({ blog, loggedUser, handleUpdate, handleRemoval }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 5,
@@ -22,12 +23,13 @@ const Blog = ({ blog, handleUpdate }) => {
       <div>
         <Togglable buttonLabel={'view'}>
           <BlogDetails blog={blog} handleUpdate={handleUpdate} />
+          {loggedUser.username === blog.user.username
+              ? <DeleteButton blog={blog} handleRemoval={handleRemoval} />
+              : null}
         </Togglable>
       </div>
     </div>
   )
 }
-
-
 
 export default Blog

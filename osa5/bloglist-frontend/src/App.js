@@ -53,6 +53,7 @@ const App = () => {
     return blogs
   }
 
+  //should I move these to Blog component?
   const addBlog = async (blog) => {
     blogFormRef.current.toggleVisibility()
     console.log('createBlog: ', blog)
@@ -80,6 +81,18 @@ const App = () => {
       handleMessage(`Updating likes failed`)
       console.log('Error: ', error)
     }   
+  }
+
+  const deleteBlog = async (blog) => {
+    try {
+      const id = blog.id
+      await blogService.remove(id)
+      setBlogs(blogs.filter(b => b.id !== id))
+      handleMessage(`Blog '${blog.title}' removed successfully`)
+    } catch (error) {
+      console.log('Error: ', error)
+      handleMessage('Removing blog failed')
+    }
   }
 
   const handleLogin = async (event) => {
@@ -131,7 +144,7 @@ const App = () => {
         <h2>Blogs</h2>
         {blogs.map(blog =>
           <div key={blog.id}>
-            <Blog blog={blog} handleUpdate={updateBlog} />
+            <Blog blog={blog} loggedUser={user} handleUpdate={updateBlog} handleRemoval={deleteBlog} />
           </div>
         )}
       </div>
