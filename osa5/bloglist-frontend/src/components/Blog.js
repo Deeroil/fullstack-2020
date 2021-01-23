@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Togglable from './Togglable'
 import BlogDetails from './BlogDetails'
 import DeleteButton from './DeleteButton'
@@ -30,6 +31,13 @@ const Blog = ({ blog, loggedUser, handleUpdate, handleRemoval }) => {
       </div>
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  loggedUser: PropTypes.object.isRequired,
+  handleRemoval: PropTypes.func.isRequired,
+  handleUpdate: PropTypes.func.isRequired
 }
 
 export default Blog

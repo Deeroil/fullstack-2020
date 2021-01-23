@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const DeleteButton = ({ blog, handleRemoval }) => {
     const removeBlog = (event) => {
@@ -13,6 +14,11 @@ const DeleteButton = ({ blog, handleRemoval }) => {
         <button onClick={(e) => removeBlog(e)}>remove</button>
       </>
     )
+}
+
+DeleteButton.propTypes = {
+  blog: PropTypes.object.isRequired,
+  handleRemoval: PropTypes.func.isRequired
 }
 
 export default DeleteButton
