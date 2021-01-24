@@ -23,7 +23,7 @@ const create = async (blog) => {
 
 const update = async (id, blog) => {
   // change populated user to id
-  blog = { ...blog, user: blog.user.id}
+  blog = { ...blog, user: blog.user.id }
   const response = await axios.put(`${baseUrl}/${id}`, blog)
   return response.data
 }

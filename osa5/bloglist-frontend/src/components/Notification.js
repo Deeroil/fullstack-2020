@@ -1,22 +1,23 @@
 import React from 'react'
+
 const Notification = ({ message }) => {
   if (!message) {
     return null
   }
 
   const style = {
-    color: "white",
-    backgroundColor: "green",
-    fontFamily: "Arial",
-    padding: "10px",
-    borderStyle: "solid",
-    borderRadius: "5px",
-    marginBottom: "10px",
+    color: 'white',
+    backgroundColor: 'green',
+    fontFamily: 'Arial',
+    padding: '10px',
+    borderStyle: 'solid',
+    borderRadius: '5px',
+    marginBottom: '10px',
   }
 
   const checkStyle = () => {
     if (message.includes('fail')) {
-      style.backgroundColor = "Red"
+      style.backgroundColor = 'Red'
     }
     return style
   }
@@ -25,7 +26,6 @@ const Notification = ({ message }) => {
     <div style={checkStyle()}>
       {message}
     </div>
-
   )
 }
 

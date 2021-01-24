@@ -15,7 +15,7 @@ const BlogDetails = ({ blog, handleUpdate }) => {
 
   const addLike = (event) => {
     event.preventDefault()
-    const updatedBlog = { ...blog, 'likes': blog.likes + 1 } 
+    const updatedBlog = { ...blog, 'likes': blog.likes + 1 }
     handleUpdate(updatedBlog)
   }
 

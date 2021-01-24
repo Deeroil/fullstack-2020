@@ -78,9 +78,9 @@ const App = () => {
       setBlogs(sortBlogs(updatedBlogs))
 
     } catch (error) {
-      handleMessage(`Updating likes failed`)
+      handleMessage('Updating likes failed')
       console.log('Error: ', error)
-    }   
+    }
   }
 
   const deleteBlog = async (blog) => {

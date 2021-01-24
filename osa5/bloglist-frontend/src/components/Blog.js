@@ -12,7 +12,7 @@ const Blog = ({ blog, loggedUser, handleUpdate, handleRemoval }) => {
     border: 'solid',
     borderRadius: 5,
     borderWidth: 1,
-    backgroundColor: '#fdfd96', 
+    backgroundColor: '#fdfd96',
     marginBottom: 5
   }
 
@@ -25,8 +25,8 @@ const Blog = ({ blog, loggedUser, handleUpdate, handleRemoval }) => {
         <Togglable buttonLabel={'view'}>
           <BlogDetails blog={blog} handleUpdate={handleUpdate} />
           {loggedUser.username === blog.user.username
-              ? <DeleteButton blog={blog} handleRemoval={handleRemoval} />
-              : null}
+            ? <DeleteButton blog={blog} handleRemoval={handleRemoval} />
+            : null}
         </Togglable>
       </div>
     </div>
