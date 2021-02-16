@@ -3,9 +3,13 @@ Submitted exercises for [Fullstack Open](https://fullstackopen.com/en) held by U
 
 > This course will introduce you to modern JavaScript-based web development. The main focus is on building single page applications with ReactJS that use REST APIs built with Node.js.
 
-### Part 5 - Testing React apps (7/22) 
-	Front-end login, React code testing
-* [Bloglist frontend](https://github.com/Deeroil/fullstack-2020/tree/master/osa5/bloglist-frontend) - work in progress
+### Part 6 - State management with Redux (0/21)
+	Flux-architecture, state management, hook-api, connect-function
+* Work in progress...
+
+### Part 5 - Testing React apps (22/22) 
+	Front-end login, proptypes, React unit testing, end-to-end testing with Cypress
+* [Bloglist frontend](https://github.com/Deeroil/fullstack-2020/tree/master/osa5/bloglist-frontend) - React UI, unit tests in Jest, Cypress E2E tests
 
 ### Part 4 - Testing Express servers, user administration (22/22)
 	Backend unit and integration tests, password hashing, token based user authentication and authorization
