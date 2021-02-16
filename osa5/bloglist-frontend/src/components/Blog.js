@@ -41,7 +41,7 @@ const Blog = ({ blog, loggedUser, handleUpdate, handleRemoval }) => {
     return (
       <div>
         <div>{blog.url}</div>
-        <div>
+        <div className='likes'>
           {'likes:' + blog.likes}
           <button onClick={(e) => addLike(e)}>like</button>
         </div>
@@ -57,7 +57,7 @@ const Blog = ({ blog, loggedUser, handleUpdate, handleRemoval }) => {
         {blog.title}, {blog.author}
       </div>
       <div>
-        <button onClick={toggleVisibility}> {detailsVisibility ? 'hide' : 'details'} </button>
+        <button className={'detailsBtn'} onClick={toggleVisibility}> {detailsVisibility ? 'hide' : 'details'} </button>
         {detailsVisibility
           ? showDetails()
           : null
