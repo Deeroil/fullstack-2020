@@ -6,6 +6,7 @@ import { setNotification, clearNotification } from '../reducers/notificationRedu
 const AnecdoteList = () => {
   const dispatch = useDispatch()
   const anecdotes = useSelector(state => state.anecdotes)
+  const filter = useSelector(state => state.filter)
 
   const getById = (id) => anecdotes.find(a => a.id === id)
 
@@ -18,6 +19,14 @@ const AnecdoteList = () => {
     }, 5000)
   }
 
+  const upperCaseTrim = (str) => str.toUpperCase().trim()
+
+  const filteredAnecdotes = () => {
+    return anecdotes.filter(a =>
+      upperCaseTrim(a.content).includes(upperCaseTrim(filter))
+    )
+  }
+
   const vote = (id) => {
     console.log('vote', id)
     dispatch(voteAnecdote(id))
@@ -26,7 +35,7 @@ const AnecdoteList = () => {
 
   return (
     <div>
-      {anecdotes.map(anecdote =>
+      {filteredAnecdotes().map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
