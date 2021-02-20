@@ -33,9 +33,9 @@ const AnecdoteList = () => {
     handleNotifications(id)
   }
 
-  return (
-    <div>
-      {filteredAnecdotes().map(anecdote =>
+  const anecdoteList = () => {
+    return (
+      filteredAnecdotes().map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
@@ -45,7 +45,13 @@ const AnecdoteList = () => {
             <button onClick={() => vote(anecdote.id)}>vote</button>
           </div>
         </div>
-      )}
+      )
+    )
+  }
+
+  return (
+    <div>
+      {anecdotes ? anecdoteList() : null}
     </div>
   )
 }
