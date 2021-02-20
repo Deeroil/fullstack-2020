@@ -20,8 +20,8 @@ const AnecdoteForm = () => {
     event.target.anecdote.value = ''
 
     console.log('create', content)
-    await anecdoteService.create(content)
-    dispatch(createAnecdote(content))
+    const newAnecdote = await anecdoteService.create(content)
+    dispatch(createAnecdote(newAnecdote))
     handleNotifications(content)
   }
 
