@@ -27,10 +27,11 @@ const AnecdoteList = () => {
     )
   }
 
-  const vote = (id) => {
-    console.log('vote', id)
-    dispatch(voteAnecdote(id))
-    handleNotifications(id)
+  //changed to obj from id
+  const vote = (obj) => {
+    console.log('vote', obj)
+    dispatch(voteAnecdote(obj))
+    handleNotifications(obj.id)
   }
 
   const anecdoteList = () => {
@@ -42,7 +43,7 @@ const AnecdoteList = () => {
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => vote(anecdote)}>vote</button>
           </div>
         </div>
       )
