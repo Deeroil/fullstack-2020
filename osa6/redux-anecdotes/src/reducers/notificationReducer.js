@@ -11,14 +11,17 @@ const notificationReducer = (state = initialState, action) => {
   }
 }
 
+let lastTimeOutId = ''
+
 export const setNotification = (text, seconds) => {
   return async (dispatch) => {
     const milliseconds = seconds * 1000
+    clearTimeout(lastTimeOutId)
     dispatch({
       type: 'SET_NOTIFICATION',
       notification: text
     })
-    setTimeout(() => {
+    lastTimeOutId = setTimeout(() => {
       dispatch(clearNotification())
     }, milliseconds)
   }
