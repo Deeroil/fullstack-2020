@@ -3,9 +3,13 @@ Submitted exercises for [Fullstack Open](https://fullstackopen.com/en) held by U
 
 > This course will introduce you to modern JavaScript-based web development. The main focus is on building single page applications with ReactJS that use REST APIs built with Node.js.
 
-### Part 6 - State management with Redux (0/21)
-	Flux-architecture, state management, hook-api, connect-function
-* Work in progress...
+### Part 7 - React router, custom hooks, styling app with CSS and webpack (0/21)
+* work in progress
+
+### Part 6 - State management with Redux (21/21)
+	Combining reducers, react-redux (hooks-api, connect-function),redux-thunk
+* [unicafe-redux](https://github.com/Deeroil/fullstack-2020/tree/master/osa6/unicafe-redux) - react-redux school diner feedback app
+* [redux-anecdotes](https://github.com/Deeroil/fullstack-2020/tree/master/osa6/redux-anecdotes) - anecdote voting/creation using react-redux, redux-thunk and json-server
 
 ### Part 5 - Testing React apps (22/22) 
 	Front-end login, proptypes, React unit testing, end-to-end testing with Cypress
